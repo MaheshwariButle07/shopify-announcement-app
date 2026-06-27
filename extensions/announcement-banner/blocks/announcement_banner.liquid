@@ -1,0 +1,97 @@
+{% assign announcement_text = shop.metafields.my_app.announcement.value | default: shop.metafields.my_app.announcement %}
+
+{% if announcement_text and announcement_text != "" %}
+  <div id="shopify-announcement-banner" class="announcement-banner-container">
+    <div class="announcement-banner-content">
+      <span>{{ announcement_text }}</span>
+    </div>
+    <button id="close-announcement-banner" class="announcement-banner-close-btn" aria-label="Close banner">
+      &times;
+    </button>
+  </div>
+
+  <style>
+    .announcement-banner-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: {{ block.settings.bg_color | default: '#111827' }};
+      color: {{ block.settings.text_color | default: '#ffffff' }};
+      z-index: 999999;
+      text-align: center;
+      padding: 12px 24px;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: transform 0.3s ease;
+    }
+
+    .announcement-banner-content {
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .announcement-banner-close-btn {
+      background: none;
+      border: none;
+      color: inherit;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 0 8px;
+      line-height: 1;
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+    }
+
+    .announcement-banner-close-btn:hover {
+      opacity: 1;
+    }
+
+    /* Push down the page content so the fixed banner doesn't cover header elements */
+    body {
+      padding-top: 45px !important;
+    }
+  </style>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const banner = document.getElementById("shopify-announcement-banner");
+      const closeBtn = document.getElementById("close-announcement-banner");
+      
+      if (closeBtn && banner) {
+        closeBtn.addEventListener("click", function() {
+          banner.style.display = "none";
+          document.body.style.paddingTop = "0px";
+        });
+      }
+    });
+  </script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Announcement Banner",
+  "target": "body",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Banner Background Color",
+      "default": "#111827"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Banner Text Color",
+      "default": "#ffffff"
+    }
+  ]
+}
+{% endschema %}
